@@ -19,6 +19,7 @@ var commonHeaders = []string{
 	"Accept-Encoding",
 	"Accept-Language",
 	"Accept-Ranges",
+	"Authorization",
 	"Cache-Control",
 	"Cc",
 	"Connection",
