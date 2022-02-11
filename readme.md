@@ -1,9 +1,11 @@
 # httpheaders
 
+[![Go Reference](https://pkg.go.dev/badge/go.withmatt.com/httpheaders.svg)](https://pkg.go.dev/go.withmatt.com/httpheaders)
+
 ```go
 import "go.withmatt.com/httpheaders"
 
-request.Headers.Get(httpheaders.ContentType)
+req.Header.Get(httpheaders.ContentType)
 ```
 
 This is a package of all the common HTTP header names pre-generated
