@@ -7,10 +7,11 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"os/exec"
+	"sort"
 	"strings"
 	"text/template"
 	"time"
-	"os/exec"
 )
 
 var commonHeaders = []string{
@@ -24,47 +25,49 @@ var commonHeaders = []string{
 	"Access-Control-Allow-Methods",
 	"Access-Control-Allow-Origin",
 	"Access-Control-Max-Age",
+	"Alt-Svc",
 	"Age",
 	"Authorization",
 	"Cache-Control",
-	"Cc",
 	"Connection",
-	"Content-Id",
+	"Content-Disposition",
 	"Content-Language",
 	"Content-Length",
+	"Content-Range",
 	"Content-Security-Policy",
 	"Content-Security-Policy-Report-Only",
-	"Content-Transfer-Encoding",
 	"Content-Type",
 	"Cookie",
 	"Date",
-	"Dkim-Signature",
+	"Dnt",
 	"Etag",
+	"Expect-Ct",
+	"Expect",
 	"Expires",
-	"From",
+	"Forwarded",
 	"Host",
+	"If-Match",
 	"If-Modified-Since",
 	"If-None-Match",
-	"In-Reply-To",
+	"If-Unmodified-Since",
+	"Keep-Alive",
 	"Last-Modified",
+	"Link",
 	"Location",
-	"Message-Id",
-	"Mime-Version",
 	"Origin",
 	"Pragma",
-	"Received",
 	"Referer",
-	"Return-Path",
+	"Retry-After",
 	"Server",
 	"Set-Cookie",
-	"Subject",
-	"To",
+	"Strict-Transport-Security",
 	"User-Agent",
 	"Vary",
 	"Via",
+	"Www-Authenticate",
 	"X-Forwarded-For",
-	"X-Imforwards",
-	"X-Powered-By",
+	"X-Forwarded-Host",
+	"X-Forwarded-Proto",
 }
 
 func main() {
@@ -79,6 +82,8 @@ func generate(name string) {
 		log.Fatal(err)
 	}
 	defer fp.Close()
+
+	sort.Strings(commonHeaders)
 
 	headers := make([][2]string, 0)
 	for _, header := range commonHeaders {
