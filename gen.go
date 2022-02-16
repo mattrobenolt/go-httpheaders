@@ -61,6 +61,7 @@ var commonHeaders = []string{
 	"Server",
 	"Set-Cookie",
 	"Strict-Transport-Security",
+	"Upgrade",
 	"User-Agent",
 	"Vary",
 	"Via",
