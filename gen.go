@@ -31,6 +31,7 @@ var commonHeaders = []string{
 	"Cache-Control",
 	"Connection",
 	"Content-Disposition",
+	"Content-Encoding",
 	"Content-Language",
 	"Content-Length",
 	"Content-Range",
