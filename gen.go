@@ -67,6 +67,8 @@ var commonHeaders = []string{
 	"Vary",
 	"Via",
 	"Www-Authenticate",
+	"X-Content-Type-Options",
+	"X-Frame-Options",
 	"X-Forwarded-For",
 	"X-Forwarded-Host",
 	"X-Forwarded-Proto",
