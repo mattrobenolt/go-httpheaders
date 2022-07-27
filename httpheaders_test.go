@@ -1,8 +1,8 @@
 package httpheaders
 
 import (
-	"testing"
 	"net/http"
+	"testing"
 )
 
 func BenchmarkFromLibrary(b *testing.B) {
@@ -43,4 +43,51 @@ func BenchmarkNotCanonicalNotCommon(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		h.Get(key)
 	}
+}
+
+func BenchmarkBypassingHelpers(b *testing.B) {
+	key := http.CanonicalHeaderKey("matt-agent")
+
+	b.Run("Get", func(b *testing.B) {
+		h := make(http.Header)
+		for i := 0; i < b.N; i++ {
+			h.Get(key)
+		}
+	})
+
+	b.Run("GetDirect", func(b *testing.B) {
+		h := make(http.Header)
+		for i := 0; i < b.N; i++ {
+			getKey(h, key)
+		}
+	})
+
+	b.Run("Set", func(b *testing.B) {
+		h := make(http.Header)
+		for i := 0; i < b.N; i++ {
+			h.Set(key, "bar")
+		}
+	})
+
+	b.Run("SetDirect", func(b *testing.B) {
+		h := make(http.Header)
+		for i := 0; i < b.N; i++ {
+			h[key] = []string{"bar"}
+		}
+	})
+
+	b.Run("SetDirectNoAlloc", func(b *testing.B) {
+		h := make(http.Header)
+		v := []string{"bar"}
+		for i := 0; i < b.N; i++ {
+			h[key] = v
+		}
+	})
+}
+
+func getKey(h http.Header, key string) string {
+	if v := h[key]; len(v) > 0 {
+		return v[0]
+	}
+	return ""
 }

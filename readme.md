@@ -30,19 +30,37 @@ Also having constants for common header values is beneficial
 similar to http status code constants like `http.StatusOK` or
 `http.MethodGet`.
 
+It is also significantly more efficient to bypass the
+`(http.Header).{Get,Set}` abstractions entirely if you're using
+canonicalized keys as proved in the benchmarks. While using the
+canonicalized form is faster in general, skipping the `{Get,Set}`
+helpers avoid even doing the check necessary to confirm if it's in
+the correct form.
+
 ### benchmarks
 
 ```
 BenchmarkFromLibrary
-BenchmarkFromLibrary-8                  61118968                19.02 ns/op            0 B/op          0 allocs/op
+BenchmarkFromLibrary-8                  58604780                19.26 ns/op            0 B/op          0 allocs/op
 BenchmarkCanonicalAndCommon
-BenchmarkCanonicalAndCommon-8           61921510                19.36 ns/op            0 B/op          0 allocs/op
+BenchmarkCanonicalAndCommon-8           59234570                18.79 ns/op            0 B/op          0 allocs/op
 BenchmarkNotCanonicalButCommon
-BenchmarkNotCanonicalButCommon-8        30440584                39.97 ns/op            0 B/op          0 allocs/op
+BenchmarkNotCanonicalButCommon-8        31013407                38.36 ns/op            0 B/op          0 allocs/op
 BenchmarkCanonicalNotCommon
-BenchmarkCanonicalNotCommon-8           59834079                19.42 ns/op            0 B/op          0 allocs/op
+BenchmarkCanonicalNotCommon-8           65812561                19.44 ns/op            0 B/op          0 allocs/op
 BenchmarkNotCanonicalNotCommon
-BenchmarkNotCanonicalNotCommon-8        12968305                96.71 ns/op           16 B/op          1 allocs/op
+BenchmarkNotCanonicalNotCommon-8        12636105               108.2 ns/op            16 B/op          1 allocs/op
+BenchmarkBypassingHelpers
+BenchmarkBypassingHelpers/Get
+BenchmarkBypassingHelpers/Get-8         60684620                18.98 ns/op            0 B/op          0 allocs/op
+BenchmarkBypassingHelpers/GetDirect
+BenchmarkBypassingHelpers/GetDirect-8           561376302                1.976 ns/op           0 B/op          0 allocs/op
+BenchmarkBypassingHelpers/Set
+BenchmarkBypassingHelpers/Set-8                 14616615                88.58 ns/op           16 B/op          1 allocs/op
+BenchmarkBypassingHelpers/SetDirect
+BenchmarkBypassingHelpers/SetDirect-8           16508486                65.67 ns/op           16 B/op          1 allocs/op
+BenchmarkBypassingHelpers/SetDirectNoAlloc
+BenchmarkBypassingHelpers/SetDirectNoAlloc-8    123816476               13.00 ns/op            0 B/op          0 allocs/op
 ```
 
 From this, we can see that the pre-canonicalized forms clock in at half the speed as a non-canonicalized common header.
