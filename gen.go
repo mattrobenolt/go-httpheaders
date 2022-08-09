@@ -58,6 +58,7 @@ var commonHeaders = []string{
 	"Origin",
 	"Pragma",
 	"Referer",
+	"Request-Id",
 	"Retry-After",
 	"Server",
 	"Set-Cookie",
